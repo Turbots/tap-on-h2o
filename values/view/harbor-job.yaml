@@ -1,0 +1,39 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:base64", "base64")
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: relocate-images-job
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: imgpkg
+          image: "ghcr.io/vmware-tanzu/carvel-docker-image:latest"
+          command: ["imgpkg"]
+          args: [
+            "copy",
+            "-b",
+            "registry.tanzu.vmware.com/packages-for-vmware-tanzu-data-services/tds-packages:1.5.0",
+            "--to-repo",
+            "harbor.vsphere.hubau.cloud/library/tds-packages"
+          ]
+          env:
+            - name: "IMGPKG_REGISTRY_HOSTNAME_0"
+              value: #@ str(data.values.essentials.registry.hostname)
+            - name: "IMGPKG_REGISTRY_USERNAME_0"
+              value: #@ str(data.values.essentials.registry.username)
+            - name: "IMGPKG_REGISTRY_PASSWORD_0"
+              value: #@ str(data.values.essentials.registry.password)
+            - name: "IMGPKG_REGISTRY_HOSTNAME_1"
+              value: #@ str(data.values.tap.developer.registry.hostname)
+            - name: "IMGPKG_REGISTRY_USERNAME_1"
+              value: #@ str(data.values.tap.developer.registry.username)
+            - name: "IMGPKG_REGISTRY_PASSWORD_1"
+              value: #@ str(data.values.tap.developer.registry.password)
+          resources:
+            requests:
+              cpu: 1
+              memory: "256Mi"

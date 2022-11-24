@@ -1,0 +1,24 @@
+#@ load("@ytt:data", "data")
+---
+profile: run
+ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
+supply_chain: basic
+
+cnrs:
+  domain_name: #@ "{}".format(data.values.tap.run.ingress)
+  domain_template: "{{.Name}}.{{.Domain}}"
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+
+appliveview_connector:
+  backend:
+    host: #@ "appliveview.{}".format(data.values.tap.view.ingress.domain)
+    sslDisabled: false
+    ingressEnabled: true
+
+excluded_packages:
+- image-policy-webhook.signing.apps.tanzu.vmware.com
+- policy.apps.tanzu.vmware.com

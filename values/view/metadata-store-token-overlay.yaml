@@ -1,0 +1,11 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.all
+---
+tap_gui:
+  app_config:
+    proxy:
+      /metadata-store:
+        headers:
+          Authorization: #@ data.values.bearer_token

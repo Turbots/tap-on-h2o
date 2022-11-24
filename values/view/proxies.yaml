@@ -1,0 +1,32 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: api-portal
+  namespace: api-portal
+spec:
+  routes:
+  - services:
+    - name: api-portal-server
+      port: 8080
+  virtualhost:
+    fqdn: #@ "api-portal.{}".format(data.values.tap.view.ingress.domain)
+    tls:
+      secretName: #@ "{}/{}".format(data.values.tap.view.ingress.tls_namespace,data.values.tap.view.ingress.tls_secret)
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: metadata-store-app
+  namespace: metadata-store
+spec:
+  routes:
+  - services:
+    - name: metadata-store-app
+      port: 8443
+      protocol: tls
+  virtualhost:
+    fqdn: #@ "metadata-store.{}".format(data.values.tap.view.ingress.domain)
+    tls:
+      secretName: #@ "{}/{}".format(data.values.tap.view.ingress.tls_namespace,data.values.tap.view.ingress.tls_secret)

@@ -1,0 +1,67 @@
+#@data/values
+---
+supervisor:
+  hostname: '' # Supervisor Cluster IP
+  password: '' # Supervisor Cluster Password
+  namespaces:
+    prod: '' # production namespace (for run cluster)
+    nonprod: '' # test namespace (for view/build clusters)
+essentials:
+  version: '' # Cluster Essentials version eg. 1.3.0
+  bundle: '' # Cluster Essentials bundle reference like eg. registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9
+  registry:
+    hostname: 'registry.tanzu.vmware.com' # registry for the Cluster Essentials packages
+    username: ''
+    password: ''
+harbor:
+  version: '' # harbor package version eg. 2.5.3+vmware.1-tkg.1
+tds:
+  version: '' # Tanzu Data Service version eg. 1.5.0
+  postgres:
+    version: '' # Postgres version eg. 1.9.0
+  mysql:
+    version: '' # MySQL version eg. 1.6.1
+  rabbitmq:
+    version: '' # RabbitMQ version eg. 1.3.0
+tap:
+  version: '' # TAP version eg. 1.3.0
+  view:
+    cluster: '' # name of the view cluster
+    ingress:
+      domain: '' # domain name for TAP itself
+      tls_namespace: 'tanzu-system-ingress'
+      tls_secret: 'contour-tls-delegation-cert'
+  build:
+    cluster: '' # name of the build cluster
+  run:
+    cluster: '' # name of the run cluster
+    ingress: '' # domain name for the CNR workloads
+  profiles:
+    view: 'view.yaml' # change the filenames as you see fit
+    build: 'build.yaml'
+    run: 'run.yaml'
+  registry:
+    hostname: 'registry.tanzu.vmware.com' # registry for the TAP packages
+    username: ''
+    password: ''
+  developer:
+    namespace: '' # dev namespace eg. team-tanzu
+    registry:
+      hostname: '' # Harbor domain name - must be subdomain of the TAP domain name
+      project: 'library' # Harbor project for packages
+      project_workload: 'library' # Harbor project for TAP workload images
+      username: 'admin' # username for that Harbor - leave to admin unless you create your own user
+      password: '1234567890123456' # must be 16 characters for Harbor to work - gets used in the scripts
+acme:
+  email: '' # email that gets registered for your Let's Encrypt domain names
+aws:
+  region: '' # AWS Region
+  route53:
+    zone_id: '' # AWS Zone ID
+    access_key: '' # AWS Access Key with access to change Route53 records
+    secret_key: '' # AWS Secret Key with access to change Route53 records
+gitops_repository:
+  server_address: 'https://github.com/' # change to eg. gitlab.com or an internal github/gitlab
+  owner: '' # github or gitlab username or project
+  access_token: '' # github/gitlab access token
+  type: 'github' # only github or gitlab are supported 

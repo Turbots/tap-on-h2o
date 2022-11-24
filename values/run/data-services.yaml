@@ -1,0 +1,58 @@
+# Services ClusterRole to create resource claims
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: resource-claims
+  labels:
+    servicebinding.io/controller: "true"
+    resourceclaims.services.apps.tanzu.vmware.com/controller: "true"
+rules:
+- apiGroups: ["rabbitmq.com"]
+  resources: ["rabbitmqclusters"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["sql.tanzu.vmware.com"]
+  resources: ["postgres"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["with.sql.tanzu.vmware.com"]
+  resources: ["mysqls"]
+  verbs: ["get", "list", "watch"]
+
+# RabbitMQ Cluster Instance Class
+---
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ClusterInstanceClass
+metadata:
+  name: rabbitmq
+spec:
+  description:
+    short: VMware RabbitMQ Cluster
+  pool:
+    group: rabbitmq.com
+    kind: RabbitmqCluster
+
+# Postgres Cluster Instance Class
+---
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ClusterInstanceClass
+metadata:
+  name: postgres
+spec:
+  description:
+    short: VMware Postgres Database
+  pool:
+    group: sql.tanzu.vmware.com
+    kind: Postgres
+
+# MySQL Cluster Instance Class
+---
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ClusterInstanceClass
+metadata:
+  name: mysql
+spec:
+  description:
+    short: VMware MySQL Database
+  pool:
+    group: with.sql.tanzu.vmware.com
+    kind: MySQL

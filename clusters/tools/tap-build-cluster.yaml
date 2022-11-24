@@ -1,0 +1,25 @@
+apiVersion: run.tanzu.vmware.com/v1alpha2
+kind: TanzuKubernetesCluster
+metadata:
+  name: tap-build-cluster
+spec:
+  distribution:
+    version: 1.22.9
+  settings:
+    storage:
+      defaultClass: vc01cl01-t0compute
+  topology:
+    controlPlane:
+      replicas: 1
+      storageClass: vc01cl01-t0compute
+      vmClass: best-effort-medium
+    nodePools:
+    - name: default-nodepool
+      replicas: 3
+      storageClass: vc01cl01-t0compute
+      vmClass: best-effort-large
+      volumes:
+        - name: containerd
+          mountPath: /var/lib/containerd
+          capacity:
+            storage: 100Gi

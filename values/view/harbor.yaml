@@ -1,0 +1,57 @@
+#@ load("@ytt:data", "data")
+---
+namespace: tanzu-system-registry
+hostname: #@ "harbor.{}".format(data.values.tap.view.ingress.domain)
+enableContourHttpProxy: true
+
+port:
+  https: 443
+
+#! [Required] The initial password of Harbor admin.
+harborAdminPassword: #@ data.values.tap.developer.registry.password
+
+#! Due to a bug in the harbor-core component, I cannot seem to reference a secret in another namespace here
+tlsCertificateSecretName:
+
+#! [Required] The secret key used for encryption. Must be a string of 16 chars.
+secretKey: #@ data.values.tap.developer.registry.password
+
+database:
+  #! [Required] The initial password of the postgres database.
+  password: #@ data.values.tap.developer.registry.password
+core:
+  replicas: 1
+  #! [Required] Secret is used when core server communicates with other components.
+  secret: #@ data.values.tap.developer.registry.password
+  #! [Required] The XSRF key. Must be a string of 32 chars.
+  xsrfKey: #@ data.values.tap.developer.registry.password + data.values.tap.developer.registry.password
+jobservice:
+  replicas: 1
+  #! [Required] Secret is used when job service communicates with other components.
+  secret: #@ data.values.tap.developer.registry.password
+registry:
+  replicas: 1
+  #! [Required] Secret is used to secure the upload state from client
+  #! and registry storage backend.
+  secret: #@ data.values.tap.developer.registry.password
+notary:
+  enabled: false
+trivy:
+  #! gitHubToken the GitHub access token to download Trivy DB
+  gitHubToken: #@ data.values.gitops_repository.access_token
+persistence:
+  persistentVolumeClaim:
+    registry:
+      size: 100Gi
+    jobservice:
+      size: 1Gi
+    database:
+      size: 1Gi
+    redis:
+      size: 1Gi
+    trivy:
+      size: 5Gi
+  imageChartStorage:
+    type: filesystem
+    filesystem:
+      rootdirectory: /storage

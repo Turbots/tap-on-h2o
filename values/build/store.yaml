@@ -1,0 +1,18 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+    name: store-ca-cert
+    namespace: metadata-store-secrets
+data:
+    ca.crt: #@ data.values.ca.crt
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: store-auth-token
+    namespace: metadata-store-secrets
+data:
+    auth_token: #@ data.values.auth.token

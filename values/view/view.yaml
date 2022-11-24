@@ -1,0 +1,99 @@
+#@ load("@ytt:data", "data")
+---
+profile: view
+ceip_policy_disclosed: true # Installation fails if this is set to 'false'
+
+learningcenter:
+  ingressDomain: #@ "learning-center.{}".format(data.values.tap.view.ingress.domain)
+  ingressSecret:
+    secretName: #@ "learning-center-{}".format(data.values.tap.view.ingress.tls_secret)
+
+supply_chain: basic
+
+appliveview:
+  ingressEnabled: true
+  ingressDomain: #@ data.values.tap.view.ingress.domain
+  tls:
+    namespace: #@ data.values.tap.view.ingress.tls_namespace
+    secretName: #@ data.values.tap.view.ingress.tls_secret
+
+tap_gui:
+  service_type: ClusterIP # NodePort for distributions that don't support LoadBalancer
+  ingressEnabled: true
+  ingressDomain: #@ data.values.tap.view.ingress.domain
+  tls:
+    namespace: #@ data.values.tap.view.ingress.tls_namespace
+    secretName: #@ data.values.tap.view.ingress.tls_secret                                                 
+  app_config: 
+    auth:
+      environment: development
+      providers:
+        github:
+          development:
+            clientId: 'cd8fa4c204b15976649f'
+            clientSecret: 'e7d1184affa99f42b93940cbdb0debdc5a171245'
+    organization:
+      name: 'Tanzu Bank'
+    customize:
+      custom_logo: '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'
+      custom_name: 'Tanzu Bank'
+    backend:
+      baseUrl: #@ "https://tap-gui.{}".format(data.values.tap.view.ingress.domain)
+      cors:
+        origin: #@ "https://tap-gui.{}".format(data.values.tap.view.ingress.domain)
+      reading:
+        allow:
+          - host: #@ "*.{}".format(data.values.tap.view.ingress.domain)
+    app:
+      baseUrl: #@ "https://tap-gui.{}".format(data.values.tap.view.ingress.domain)
+      title: 'Tanzu Bank'
+    catalog:
+      locations:
+        - type: url
+          target: https://github.com/Turbots/tap-catalog/blob/main/catalog-info.yaml
+    kubernetes:
+      serviceLocatorMethod:
+        type: multiTenant
+      clusterLocatorMethods:
+      - type: config
+        clusters:
+        - url: https://10.220.10.228:6443
+          name: tap-build-cluster
+          authProvider: serviceAccount
+          serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6Il9tRk9fTE56LVpWTmszcXVDTmgtU0doSlhzem5DQW55WVRNck42REVZRTgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLTk0emg2Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNGNmNmQzZGItYWUzZS00NjgzLThhNjEtNDM2N2VlYjllYWQ4Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.yEAfiN3L0_vwV_T4lgVqGLNmkHc03_Mb5hoGgJGeGLWqlaZN5bLMBj93400GskzyIyf8It_jKuXAVtHR6ZRZcTyelkVHwZ2U_rKD04El0r8jEKlC9V7gfOUSmtoYynTAIgjT1g2qpVmE2doqGa2OJpC6mxevsR1u2HgFLGsxav4_0wJ9mHGcd_eXzhjSecsIsoYcYSKp2TTIywB7yD5jzy0Pm_jDNm_V-1b_Ad5CZYyzZapVIbhOWXqP3jpi1s-CMS8MHRCO9iyJ-lBt2r98cFWWGnSpd0xclSiAKtvD8uWf27-wuQOf95Ws2oGy7397vlHlGTVFAihuB-c1GXJ0Ig
+          skipTLSVerify: true
+        - url: https://10.220.10.231:6443
+          name: tap-run-cluster
+          authProvider: serviceAccount
+          serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IlItS19PRWUtQU1halk4QWtTNmtCNjVwQmxfOVktbWpGRmhqVW5MbEpxZ0EifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLWZ0OGxkIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMTkzNjM5MmQtMjQ0YS00MGZiLTk1ZWEtZjVmMjkwNjA1MzE1Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.WR7wLBk-KDazBr7JEz56FUMkdr66sTF30m_87EzAQZEHQgZOws5EQM8yGPijK9F44RoKQ1DUR_ivAItMiQVAHofJNN83To-2UTbsX-PmLiHPUbN9sgy6XISCu9knTRnpClHOxU3uGklsk4kO8Wa2KkVUQop8LSYcPutjLxYAUfAqCmuwT5dpjYT0qRAF9a14KdgaAy_M45Y2kHUlEcgt--ap1rpd30AwMQCjC-8G97M3OpUKxzy92kVAQbUXFLw-s_Rdtl12Z5y3ZUTFSSdGmryQfs4bztJqMU5YfYv4MhYxT2KXJ7dnDVLT48L2WuLux0CYF4kvsct6U6UvukPMfg
+          skipTLSVerify: true
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        headers:
+          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImszQ2xSUzhqeExORlRKdEY3VXRGXzhyVThXLVVpWFVyTUVueDdmTGVnRFEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjdjM2E2Yjc2LTdiOGItNGQzMi1hYjkyLThiYjk2ZDU0MjE3MCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCJ9.3pmCxFP5--Q_2bZ59O0FH4cNqrmf1c42U7asMgEjj5sUosMPiS55v6k10U27moU2Cgb7tJ477Dmc1KN31m93E42C43zyq07ylPj4CZf4dUtgwddswy8YMsj5BgMBAIIH_Vps8vPu_UkUV9RjqFsZOufev1a1EQP-I8MUsbEJdEGLpwyr9C1G8aiXQHAYLttBSEDFmzCVx1FCHeDSWCu81mkBkUARk8ewnJHR6Cti5NQNu879KwhP9p4EwCtmFNy54NcnEnb1K6R2ZBICXN9HEdPrkq9ZM2-fHyfZK9x7UFAyjF-ZuxKkRkGbqjiRPRXrwASAPjKL_U9rXaSEVJIb1g"
+          X-Custom-Source: project-star
+metadata_store:
+  ingress_enabled: "true"
+  ingress_domain: #@ data.values.tap.view.ingress.domain
+  app_service_type: "ClusterIP"  # recommended if ingress is enabled
+  tls:  # this section is only needed if a custom certificate is being provided
+    secretName: #@ data.values.tap.view.ingress.tls_secret
+    namespace: #@ data.values.tap.view.ingress.tls_namespace
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+
+accelerator: 
+  domain: #@ "{}".format(data.values.tap.view.ingress.domain)
+  ingress:
+    include: true
+  tls:
+    namespace: #@ data.values.tap.view.ingress.tls_namespace
+    secretName: #@ data.values.tap.view.ingress.tls_secret
+  server:
+    service_type: ClusterIP
