@@ -35,7 +35,6 @@ tap:
     cluster: '' # name of the build cluster
   run:
     cluster: '' # name of the run cluster
-    ingress: '' # domain name for the CNR workloads
   profiles:
     view: 'view.yaml' # change the filenames as you see fit
     build: 'build.yaml'

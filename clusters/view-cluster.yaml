@@ -1,7 +1,7 @@
 apiVersion: run.tanzu.vmware.com/v1alpha2
 kind: TanzuKubernetesCluster
 metadata:
-  name: tap-run-cluster
+  name: tap-view
 spec:
   distribution:
     version: 1.22.9
@@ -12,12 +12,12 @@ spec:
     controlPlane:
       replicas: 1
       storageClass: vc01cl01-t0compute
-      vmClass: guaranteed-medium
+      vmClass: best-effort-medium
     nodePools:
     - name: default-nodepool
       replicas: 3
       storageClass: vc01cl01-t0compute
-      vmClass: guaranteed-2xlarge-lowmem
+      vmClass: best-effort-2xlarge
       volumes:
         - name: containerd
           mountPath: /var/lib/containerd

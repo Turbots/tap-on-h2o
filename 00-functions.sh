@@ -69,19 +69,13 @@ loadSetting '.tap.version' 'TAP_VERSION'
 export GENERATED_DIR="generated"
 export VALUES_DIR="values"
 
-if [ -z $1] ; then
-    info "Fetching fresh tokens for all clusters"
-
-    loginToSupervisor $KUBECTX_SV_CLUSTER
-    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_NON_PROD $KUBECTX_VIEW_CLUSTER
-    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_NON_PROD $KUBECTX_BUILD_CLUSTER
-    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_PROD $KUBECTX_RUN_CLUSTER
-
-else
-    info "Fetching fresh tokens for all clusters"
+if [ $# -eq 2 ] ; then
+    info "Fetching fresh tokens for cluster $2"
     
     loginToSupervisor $KUBECTX_SV_CLUSTER
     loginToCluster $KUBECTX_SV_CLUSTER $1 $2
+else
+    warn "Usage: ./00-functions.sh <VSPHERE_NAMESPACE> <CLUSTER_NAME>"
 fi
 
 success "Initialized"

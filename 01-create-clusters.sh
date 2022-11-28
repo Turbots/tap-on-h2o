@@ -7,9 +7,9 @@ function deploy_clusters() {
 
     kubectx $1
     
-    kubectl apply -f clusters/$SV_NS_NON_PROD/$KUBECTX_VIEW_CLUSTER.yaml -n $SV_NS_NON_PROD
-    kubectl apply -f clusters/$SV_NS_NON_PROD/$KUBECTX_BUILD_CLUSTER.yaml -n $SV_NS_NON_PROD
-    kubectl apply -f clusters/$SV_NS_PROD/$KUBECTX_RUN_CLUSTER.yaml -n $SV_NS_PROD
+    kubectl apply -f clusters/view-cluster.yaml -n $SV_NS_NON_PROD
+    kubectl apply -f clusters/build-cluster.yaml -n $SV_NS_NON_PROD
+    kubectl apply -f clusters/run-cluster.yaml -n $SV_NS_PROD
 }
 
 loginToSupervisor $KUBECTX_SV_CLUSTER
