@@ -1,7 +1,10 @@
 # tap-on-h2o
+
 Automates TAP installation on H2o environments
 
 ## Instructions
+
+- For best user experience, run this using [VScode Remote container plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). This will ensure all dependencies, are met.
 
 ### Preparation
 
