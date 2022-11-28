@@ -13,4 +13,11 @@
 #tanzu plugin install --local cli all
 #tanzu plugin list
 #echo alias k=kubectl >> /home/vscode/.bashrc
+
+# Instal Pivnet
+#sudo wget https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.1/pivnet-linux-amd64-3.0.1
+#sudo chmod +x pivnet-linux-amd64-3.0.1
+#sudo mv pivnet-linux-amd64-3.0.1 /usr/bin/pivnet 
+
+
 echo "Post install script finished!!!"
