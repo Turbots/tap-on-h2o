@@ -2,3 +2,4 @@ downloads/
 generated/
 values/default.yaml
 .vscode/
+.DS_Store
