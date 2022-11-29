@@ -12,12 +12,13 @@ loadSetting '.essentials.registry.password' 'INSTALL_REGISTRY_PASSWORD' '-p'
 
 function download_cluster_essentials(){
     if [[ ! -f "downloads/tanzu-cluster-essentials-linux-amd64-$1.tgz" ]]; then
-    info "Downloading cluster essentials"
-    pivnet login --api-token=$PIVOTAL_API_TOKEN
-    pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$1 --product-file-id=1330470
-    mv tanzu-cluster-essentials-linux-amd64-$1.tgz downloads/tanzu-cluster-essentials-linux-amd64-$1.tgz
+        info "Downloading cluster essentials"
+        pivnet login --api-token=$PIVOTAL_API_TOKEN
+        pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$1 --product-file-id=1330470
+        mv tanzu-cluster-essentials-linux-amd64-$1.tgz downloads/tanzu-cluster-essentials-linux-amd64-$1.tgz
+    else
+        info "Cluster essentials already downloaded - Skipping!"
     fi
-    info "Cluster essentials already downloaded - Skipping!"
 }
 
 function unpack_cluster_essentials() {
@@ -51,15 +52,16 @@ function install_cluster_essentials() {
 
     success "Cluster essentials successfully installed on $1."
 }
+
 download_cluster_essentials $CLUSTER_ESSENTIALS_VERSION
 unpack_cluster_essentials $CLUSTER_ESSENTIALS_VERSION
 
 if [ -z $1 ] ; then
-    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_PROD $KUBECTX_VIEW_CLUSTER
+    loginToViewCluster
     install_cluster_essentials $KUBECTX_VIEW_CLUSTER
-    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_NON_PROD $KUBECTX_BUILD_CLUSTER
+    loginToBuildCluster
     install_cluster_essentials $KUBECTX_BUILD_CLUSTER
-    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_NON_PROD $KUBECTX_RUN_CLUSTER
+    loginToRunCluster
     install_cluster_essentials $KUBECTX_RUN_CLUSTER
 else
     install_cluster_essentials $1

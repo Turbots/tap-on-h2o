@@ -14,10 +14,6 @@ loadSetting '.tap.developer.registry.hostname' 'DEV_REGISTRY_HOSTNAME'
 loadSetting '.harbor.version' 'HARBOR_VERSION'
 
 function install_tap_view_profile() {
-    info "Installing TAP on $1"
-
-    kubectx $1
-
     mkdir -p $GENERATED_DIR
 
     tanzu secret registry -n tap-install add tap-registry \
@@ -60,11 +56,7 @@ function install_tap_view_profile() {
 }
 
 function install_harbor() {
-    info "Configuring Tanzu Standard repository on $1"
-
     tanzu package repository add tanzu-standard --url projects.registry.vmware.com/tkg/packages/standard/repo:v1.6.0 -n tap-install
-
-    info "Installing Harbor on $1"
 
     ytt -f "$VALUES_DIR/view/harbor.yaml" -f "$VALUES_DIR/default.yaml" --ignore-unknown-comments > "$GENERATED_DIR/harbor.yaml"
 
@@ -85,21 +77,24 @@ function install_harbor() {
     kubectl delete pods -l app=harbor -n tanzu-system-registry
 
     info "Harbor installed successfully on $1"
-
-    
 }
 
 function relocate_images_for_tds() {
-    info "Relocating Tanzu Data Services container images from $ESSENTIALS_REGISTRY_HOSTNAME to $DEV_REGISTRY_HOSTNAME."
-
     kapp deploy -n tap-install -a relocate-job \
         --file <(\
             ytt -f $VALUES_DIR/default.yaml -f $VALUES_DIR/view/harbor-job.yaml --ignore-unknown-comments \
         ) --yes
 }
 
-install_tap_view_profile $KUBECTX_VIEW_CLUSTER
-install_harbor $KUBECTX_VIEW_CLUSTER
+loginToViewCluster
+
+info "Installing TAP View Profile on $KUBECTX_VIEW_CLUSTER"
+install_tap_view_profile
+
+info "Installing Harbor on $KUBECTX_VIEW_CLUSTER"
+install_harbor
+
+info "Relocating Tanzu Data Services container images from $ESSENTIALS_REGISTRY_HOSTNAME to $DEV_REGISTRY_HOSTNAME."
 relocate_images_for_tds
 
 success "TAP installation on $KUBECTX_VIEW_CLUSTER has completed."

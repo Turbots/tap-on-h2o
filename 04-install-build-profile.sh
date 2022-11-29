@@ -18,8 +18,6 @@ loadSetting '.gitops_repository.owner' 'GITOPS_OWNER'
 loadSetting '.gitops_repository.access_token' 'GITOPS_TOKEN' '-p'
 
 function install_tap_build_profile() {
-    info "Installing TAP on $1"
-
     kubectx $1
 
     mkdir -p $GENERATED_DIR
@@ -85,8 +83,6 @@ function install_tap_build_profile() {
 }
 
 function setup_store_ca() {
-    info "Fetching metadata store token from $1"
-
     kubectx $1
 
     export STORE_ca__crt=$(kubectl get secret contour-tls-delegation-cert -n tanzu-system-ingress -o json | jq -r ".data.\"tls.crt\"")
@@ -102,7 +98,13 @@ function setup_store_ca() {
         ) --yes
 }
 
+loginToViewCluster
+loginToBuildCluster
+
+info "Installing TAP Build Profile on $KUBECTX_BUILD_CLUSTER"
 install_tap_build_profile $KUBECTX_BUILD_CLUSTER
+
+info "Updating Metadata Store Token in $KUBECTX_BUILD_CLUSTER"
 setup_store_ca $KUBECTX_VIEW_CLUSTER $KUBECTX_BUILD_CLUSTER
 
 success "TAP installation on $KUBECTX_BUILD_CLUSTER completed."

@@ -52,6 +52,8 @@ tap:
       project_workload: 'library' # Harbor project for TAP workload images
       username: 'admin' # username for that Harbor - leave to admin unless you create your own user
       password: '1234567890123456' # must be 16 characters for Harbor to work - gets used in the scripts
+  metadata-store:
+    token: '' # bearer token for the TAP View Cluster to access the metadata store - fill in AFTER installation of View Profile
 acme:
   email: '' # email that gets registered for your Let's Encrypt domain names
 aws:

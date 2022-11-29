@@ -15,8 +15,6 @@ loadSetting '.tds.mysql.version' 'MYSQL_VERSION'
 loadSetting '.tds.rabbitmq.version' 'RABBITMQ_VERSION'
 
 function install_services() {
-    info "Installing services on $1."
-
     kubectx $1
 
     info "Updating TDS repository on $1."
@@ -65,5 +63,9 @@ function install_services() {
         --yes
 }
 
-install_services $cluster
+loginToRunCluster
+
+info "Installing services on $KUBECTX_RUN_CLUSTER."
+install_services $KUBECTX_RUN_CLUSTER
+
 success "All services were installed successfully on $KUBECTX_RUN_CLUSTER."

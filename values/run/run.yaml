@@ -5,7 +5,7 @@ ceip_policy_disclosed: true # Installation fails if this is not set to true. Not
 supply_chain: basic
 
 cnrs:
-  domain_name: #@ "{}".format(data.values.tap.run.ingress)
+  domain_name: #@ "run.{}".format(data.values.tap.view.ingress.domain)
   domain_template: "{{.Name}}.{{.Domain}}"
 
 contour:

@@ -71,6 +71,25 @@ function loginToCluster() {
     success "Logged in to $3."
 }
 
+function loginToViewCluster() {
+    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_NON_PROD $KUBECTX_VIEW_CLUSTER
+}
+
+function loginToBuildCluster() {
+    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_NON_PROD $KUBECTX_BUILD_CLUSTER
+}
+
+function loginToRunCluster() {
+    loginToCluster $KUBECTX_SV_CLUSTER $SV_NS_PROD $KUBECTX_RUN_CLUSTER
+}
+
+function loginToAllClusters() {
+    loginToSupervisor
+    loginToViewCluster
+    loginToBuildCluster
+    loginToRunCluster
+}
+
 loadSetting '.supervisor.hostname' 'KUBECTX_SV_CLUSTER'
 loadSetting '.supervisor.password' 'KUBECTL_VSPHERE_PASSWORD' '-p'
 loadSetting '.supervisor.namespaces.prod' 'SV_NS_PROD'
@@ -85,13 +104,4 @@ loadSetting '.tap.version' 'TAP_VERSION'
 export GENERATED_DIR="generated"
 export VALUES_DIR="values"
 
-if [ $# -eq 2 ] ; then
-    info "Fetching fresh tokens for cluster $2"
-    
-    loginToSupervisor $KUBECTX_SV_CLUSTER
-    loginToCluster $KUBECTX_SV_CLUSTER $1 $2
-else
-    warn "Usage: ./00-functions.sh <VSPHERE_NAMESPACE> <CLUSTER_NAME>"
-fi
-
-success "Initialized"
+success "Settings Initialized"

@@ -5,10 +5,8 @@ source 00-functions.sh
 loadSetting '.tap.profiles.view' 'VIEW_PROFILE'
 
 function update_cluster_locator_info() {
-    info "Updating view cluster locator info for $1."
-
     kubectx $1
-
+    
     export CLUSTER_name=$1
     export CLUSTER_url=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
     export CLUSTER_token=$(kubectl -n tap-gui get secret $(kubectl -n tap-gui get sa tap-gui-viewer -o=json \
@@ -22,8 +20,6 @@ function update_cluster_locator_info() {
 }
 
 function update_metadata_store_token() {
-    info "Updating metadata store Bearer Token so $1 can display CVE information in the GUI."
-
     kubectx $1
 
     export BEARER_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-store -o jsonpath="{.data.token}" | base64 -d)
@@ -34,8 +30,6 @@ function update_metadata_store_token() {
 }
 
 function update_view_cluster() {
-    info "Updating view cluster configuration."
-
     kubectx $1
 
     tanzu package install tap -n tap-install \
@@ -44,11 +38,17 @@ function update_view_cluster() {
         --values-file "$GENERATED_DIR/$VIEW_PROFILE"
 }
 
+loginToViewCluster
+loginToBuildCluster
+loginToRunCluster
+
+info "Updating metadata store Bearer Token so $1 can display CVE information in the GUI."
 update_metadata_store_token $KUBECTX_VIEW_CLUSTER
 
 update_cluster_locator_info $KUBECTX_BUILD_CLUSTER
 update_cluster_locator_info $KUBECTX_RUN_CLUSTER
 
+info "Updating view cluster configuration."
 update_view_cluster $KUBECTX_VIEW_CLUSTER
 
 success "View cluster should be able to connect to all your build and run clusters now."

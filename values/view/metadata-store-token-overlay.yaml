@@ -8,4 +8,4 @@ tap_gui:
     proxy:
       /metadata-store:
         headers:
-          Authorization: #@ data.values.bearer_token
+          Authorization: #@ "Bearer {}".format(data.values.bearer_token)

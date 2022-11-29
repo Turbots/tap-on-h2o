@@ -14,8 +14,6 @@ loadSetting '.tap.developer.registry.username' 'REGISTRY_USERNAME'
 loadSetting '.tap.developer.registry.password' 'REGISTRY_PASSWORD' '-p'
 
 function install_tap_run_profile() {
-    info "Installing TAP Run Profile on $1"
-
     kubectx $1
 
     mkdir -p $GENERATED_DIR
@@ -32,14 +30,14 @@ function install_tap_run_profile() {
     tanzu package repository -n tap-install add tanzu-tap-repository \
         --url $INSTALL_REGISTRY_HOSTNAME/tanzu-application-platform/tap-packages:$TAP_VERSION
 
-    ytt -f "$VALUES_DIR/run/$1.yaml" -f "$VALUES_DIR/default.yaml" --ignore-unknown-comments > "$GENERATED_DIR/$1.yaml"
+    ytt -f "$VALUES_DIR/run/run.yaml" -f "$VALUES_DIR/default.yaml" --ignore-unknown-comments > "$GENERATED_DIR/run.yaml"
 
     info "Installing TAP $TAP_VERSION"
 
     tanzu package install tap -n tap-install \
         --package-name tap.tanzu.vmware.com \
         --version $TAP_VERSION \
-        --values-file "$GENERATED_DIR/$1.yaml"
+        --values-file "$GENERATED_DIR/run.yaml"
 
     info "Configuring permissions for deliverables"
 
@@ -71,6 +69,9 @@ function install_tap_run_profile() {
         --yes
 }
 
+loginToRunCluster
+
+info "Installing TAP View Profile on $KUBECTX_RUN_CLUSTER"
 install_tap_run_profile $KUBECTX_RUN_CLUSTER
 
 success "TAP installation on $KUBECTX_RUN_CLUSTER completed."
