@@ -7,6 +7,7 @@ supervisor:
     prod: '' # production namespace (for run cluster)
     nonprod: '' # test namespace (for view/build clusters)
 essentials:
+  pivotal_api_token: '' # Pivotal API token from https://network.pivotal.io/users/dashboard/edit-profile
   version: '' # Cluster Essentials version eg. 1.3.0
   bundle: '' # Cluster Essentials bundle reference like eg. registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9
   registry:

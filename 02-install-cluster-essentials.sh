@@ -2,11 +2,19 @@
 
 source 00-functions.sh
 
+loadSetting '.essentials.pivotal_api_token' 'PIVOTAL_API_TOKEN'
 loadSetting '.essentials.version' 'CLUSTER_ESSENTIALS_VERSION'
 loadSetting '.essentials.bundle' 'INSTALL_BUNDLE'
 loadSetting '.essentials.registry.hostname' 'INSTALL_REGISTRY_HOSTNAME'
 loadSetting '.essentials.registry.username' 'INSTALL_REGISTRY_USERNAME'
 loadSetting '.essentials.registry.password' 'INSTALL_REGISTRY_PASSWORD' '-p'
+
+function download_cluster_essentials(){
+    info "Downloading cluster essentials"
+    pivnet login --api-token=$PIVOTAL_API_TOKEN
+    pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$1 --product-file-id=1330472
+    mv tanzu-cluster-essentials-darwin-amd64-$1.tgz downloads/tanzu-cluster-essentials-darwin-amd64-$1.tgz
+}
 
 function unpack_cluster_essentials() {
     info "Unpacking cluster essentials"
@@ -39,7 +47,7 @@ function install_cluster_essentials() {
 
     success "Cluster essentials successfully installed on $1."
 }
-
+download_cluster_essentials $CLUSTER_ESSENTIALS_VERSION
 unpack_cluster_essentials $CLUSTER_ESSENTIALS_VERSION
 
 if [ -z $1 ] ; then

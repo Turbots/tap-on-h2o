@@ -39,6 +39,22 @@ function println() {
     echo "\n"$fg[$1]"|$paddedString|"$reset_color" $3\n"
 }
 
+function install_vsphere_plugin() {
+    info "Downloading and install Kubectl vSphere plugin"
+
+    if [[ ! -f "/home/vscode/.local/bin/kubectl-vsphere" ]]; then
+    wget -O downloads/vsphere-plugin.zip https://$1/wcp/plugin/linux-amd64/vsphere-plugin.zip --no-check-certificate
+
+    mkdir -p /home/vscode/.local
+    unzip -o downloads/vsphere-plugin.zip -d downloads
+    mv -f downloads/bin /home/vscode/.local
+    #rm vsphere-plugin.zip
+
+    success "Plugin installed"
+    fi
+    info "Plugin already installed - Skipping"
+}
+
 function loginToSupervisor() {
     info "Logging in to supervisor cluster $1"
 
