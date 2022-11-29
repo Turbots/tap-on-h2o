@@ -24,5 +24,5 @@ Automates TAP installation on H2o environments
 
 ### Testing
 
-- Apply new workloads to the build cluster
-- Deploy workloads to the run cluster
+- Apply new Workloads to the build cluster
+- Deploy Deliverables to the run cluster
