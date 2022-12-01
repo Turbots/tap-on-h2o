@@ -47,7 +47,7 @@ function install_vsphere_plugin() {
 
     mkdir -p /home/vscode/.local
     unzip -o downloads/vsphere-plugin.zip -d downloads
-    cp -f downloads/bin /home/vscode/.local
+    cp -r downloads/bin /home/vscode/.local
     rm downloads/vsphere-plugin.zip
 
     success "Plugin installed"
