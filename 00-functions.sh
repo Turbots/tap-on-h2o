@@ -42,17 +42,15 @@ function println() {
 function install_vsphere_plugin() {
     info "Downloading and install Kubectl vSphere plugin"
 
-    if [[ ! -f "/home/vscode/.local/bin/kubectl-vsphere" ]]; then
+    mkdir downloads
     wget -O downloads/vsphere-plugin.zip https://$1/wcp/plugin/linux-amd64/vsphere-plugin.zip --no-check-certificate
 
     mkdir -p /home/vscode/.local
     unzip -o downloads/vsphere-plugin.zip -d downloads
-    mv -f downloads/bin /home/vscode/.local
-    #rm vsphere-plugin.zip
+    cp -f downloads/bin /home/vscode/.local
+    rm downloads/vsphere-plugin.zip
 
     success "Plugin installed"
-    fi
-    info "Plugin already installed - Skipping"
 }
 
 function loginToSupervisor() {

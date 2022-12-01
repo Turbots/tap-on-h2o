@@ -10,6 +10,8 @@ FROM --platform=linux/amd64 mcr.microsoft.com/vscode/devcontainers/base:0-${VARI
 #RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 #RUN chmod +x kubectl && sudo mv kubectl /usr/bin
 
+# Install tools
+RUN apt update && apt install -y wget
 # Install pivnet
 RUN wget https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.1/pivnet-linux-amd64-3.0.1
 RUN chmod +x pivnet-linux-amd64-3.0.1
