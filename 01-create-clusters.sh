@@ -11,6 +11,7 @@ function deploy_clusters() {
     kubectl apply -f clusters/build-cluster.yaml -n $SV_NS_NON_PROD
     kubectl apply -f clusters/run-cluster.yaml -n $SV_NS_PROD
 }
+
 install_vsphere_plugin $KUBECTX_SV_CLUSTER
 
 loginToSupervisor $KUBECTX_SV_CLUSTER

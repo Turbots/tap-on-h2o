@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+set -e
+setopt aliases
+
 autoload colors; colors
 
 function loadSetting() {
@@ -36,21 +39,44 @@ function print() {
 
 function println() {
     local paddedString=`(printf %-8s $2)`
-    echo "\n"$fg[$1]"|$paddedString|"$reset_color" $3\n"
+    echo "\n"$fg[$1]"|$paddedString|"$reset_color" $3"
+}
+
+function createDirectory() {
+    [ -d $1 ] || mkdir -p $1
+}
+
+function determinePlatform() {
+    if [ "$(uname)" = "Darwin" ]; then
+        info "Platform is Mac."
+        export PLATFORM="darwin"
+    elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
+        info "Platform is Linux."
+        export PLATFORM="linux"
+    else
+        warn "We don't support MINGW64_NT environments."
+    fi
+}
+
+function determineIfSiliconMac() {
+    if [[ $(uname -m) == 'arm64' ]]; then
+        export SILICON_MAC="true"
+        info "Mac has an Apple Silicon chip (ARM64 based)."
+    fi
 }
 
 function install_vsphere_plugin() {
-    info "Downloading and install Kubectl vSphere plugin"
+    createDirectory downloads
 
-    mkdir downloads
-    wget -O downloads/vsphere-plugin.zip https://$1/wcp/plugin/linux-amd64/vsphere-plugin.zip --no-check-certificate
+    if [ ! -f "downloads/vsphere-plugin-$PLATFORM.zip" ]; then
+        info "Downloading Kubectl vSphere plugin for $PLATFORM"
+        wget -O downloads/vsphere-plugin-$PLATFORM.zip https://$1/wcp/plugin/$PLATFORM-amd64/vsphere-plugin.zip --no-check-certificate
+    fi
+    info "Installing Kubectl vSphere plugin for $PLATFORM"
+    unzip -o downloads/vsphere-plugin-$PLATFORM.zip -d downloads
+    export PATH="$PATH:$PWD/downloads/bin"
 
-    mkdir -p /home/vscode/.local
-    unzip -o downloads/vsphere-plugin.zip -d downloads
-    cp -r downloads/bin /home/vscode/.local
-    rm downloads/vsphere-plugin.zip
-
-    success "Plugin installed"
+    success "Kubectl vSphere Plugin installed"
 }
 
 function loginToSupervisor() {
@@ -87,6 +113,8 @@ function loginToAllClusters() {
     loginToBuildCluster
     loginToRunCluster
 }
+
+determinePlatform
 
 loadSetting '.supervisor.hostname' 'KUBECTX_SV_CLUSTER'
 loadSetting '.supervisor.password' 'KUBECTL_VSPHERE_PASSWORD' '-p'
