@@ -22,6 +22,16 @@ function install_tap_build_profile() {
 
     mkdir -p $GENERATED_DIR
 
+    info "Creating developer namespace ${DEVELOPER_NAMESPACE}"
+
+    kapp deploy --app "tap-dev-ns-${DEVELOPER_NAMESPACE}" -n tap-install \
+        --file <(\
+            kubectl create namespace "${DEVELOPER_NAMESPACE}" \
+            --dry-run=client \
+            --output=yaml \
+            --save-config \
+        ) --yes
+
     info "Adding $INSTALL_REGISTRY_HOSTNAME as the main registry secret"
 
     tanzu secret registry -n tap-install add tap-registry \
@@ -58,16 +68,8 @@ function install_tap_build_profile() {
     
     info "Configuring developer namespace ${DEVELOPER_NAMESPACE}"
 
-    kapp deploy --app "tap-dev-ns-${DEVELOPER_NAMESPACE}" -n tap-install \
-        --file <(\
-            kubectl create namespace "${DEVELOPER_NAMESPACE}" \
-            --dry-run=client \
-            --output=yaml \
-            --save-config \
-        ) --yes
-
     kapp deploy --app git-secret -n tap-install \
-        --file <(\ 
+        --file <(\
             ytt -f $VALUES_DIR/default.yaml -f $VALUES_DIR/build/git-secret.yaml --ignore-unknown-comments \
         ) --yes
 
