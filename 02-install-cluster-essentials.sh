@@ -2,7 +2,7 @@
 
 source 00-functions.sh
 
-loadSetting '.essentials.pivotal_api_token' 'PIVOTAL_API_TOKEN'
+loadSetting '.essentials.tanzu_network_token' 'TANZU_NETWORK_TOKEN' '-p'
 loadSetting '.supervisor.hostname' 'KUBECTX_SV_CLUSTER'
 loadSetting '.essentials.version' 'CLUSTER_ESSENTIALS_VERSION'
 loadSetting '.essentials.bundle' 'INSTALL_BUNDLE'
@@ -11,11 +11,15 @@ loadSetting '.essentials.registry.username' 'INSTALL_REGISTRY_USERNAME'
 loadSetting '.essentials.registry.password' 'INSTALL_REGISTRY_PASSWORD' '-p'
 
 function download_cluster_essentials(){
-    if [[ ! -f "downloads/tanzu-cluster-essentials-linux-amd64-$1.tgz" ]]; then
-        info "Downloading cluster essentials"
-        pivnet login --api-token=$PIVOTAL_API_TOKEN
-        pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$1 --product-file-id=1330470
-        mv tanzu-cluster-essentials-linux-amd64-$1.tgz downloads/tanzu-cluster-essentials-linux-amd64-$1.tgz
+    if [[ ! -f "downloads/tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz" ]]; then
+        if [ SILICON_MAC = "true" ]; then
+            warn "Pivnet CLI is not yet supported on Apple Silicon chip (ARM64). Please download the Cluster Essentials file manually, or run this script in Linux using DevContainers."
+        else
+            info "Downloading cluster essentials for $PLATFORM"
+            pivnet login --api-token=$TANZU_NETWORK_TOKEN
+            pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$1 --product-file-id=1330470
+            mv tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz downloads/tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz
+        fi
     else
         info "Cluster essentials already downloaded - Skipping!"
     fi
@@ -25,7 +29,7 @@ function unpack_cluster_essentials() {
     info "Unpacking cluster essentials"
 
     mkdir -p downloads/tanzu-cluster-essentials
-    tar -xvf downloads/tanzu-cluster-essentials-linux-amd64-$1.tgz -C downloads/tanzu-cluster-essentials
+    tar -xvf downloads/tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz -C downloads/tanzu-cluster-essentials
 }
 
 function install_cluster_essentials() {

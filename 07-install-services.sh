@@ -4,6 +4,8 @@ source 00-functions.sh
 
 loadSetting '.tap.developer.namespace' 'DEVELOPER_NAMESPACE'
 
+loadSetting '.essentials.registry.hostname' 'ESSENTIALS_REGISTRY_HOSTNAME'
+
 loadSetting '.tap.developer.registry.hostname' 'REGISTRY_HOSTNAME'
 loadSetting '.tap.developer.registry.project' 'REGISTRY_PROJECT'
 loadSetting '.tap.developer.registry.username' 'REGISTRY_USERNAME'
