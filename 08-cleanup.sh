@@ -12,6 +12,8 @@ function delete_clusters() {
     kubectl delete -f clusters/run-cluster.yaml -n $SV_NS_PROD --wait=false
 }
 
+install_vsphere_plugin $KUBECTX_SV_CLUSTER
+
 loginToSupervisor $KUBECTX_SV_CLUSTER
 
 delete_clusters $KUBECTX_SV_CLUSTER
