@@ -25,6 +25,7 @@ metadata:
   name: default
 secrets:
   - name: git-secret
+  - name: dev-registry
 imagePullSecrets:
   - name: registry-credentials
   - name: tap-registry
