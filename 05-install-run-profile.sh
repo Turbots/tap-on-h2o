@@ -67,11 +67,18 @@ function install_tap_run_profile() {
     kapp deploy --app permissions -n ${DEVELOPER_NAMESPACE} \
         --file $VALUES_DIR/run/permissions.yaml \
         --yes
+    
+    info "Configuring automated DNS certificates"
+
+    kapp deploy -n tap-install -a lets-encrypt-issuer \
+        --file <(\
+            ytt -f $VALUES_DIR/default.yaml -f $VALUES_DIR/letsencrypt.yaml --ignore-unknown-comments \
+        ) --yes
 }
 
 loginToRunCluster
 
-info "Installing TAP View Profile on $KUBECTX_RUN_CLUSTER"
+info "Installing TAP Run Profile on $KUBECTX_RUN_CLUSTER"
 install_tap_run_profile $KUBECTX_RUN_CLUSTER
 
 success "TAP installation on $KUBECTX_RUN_CLUSTER completed."

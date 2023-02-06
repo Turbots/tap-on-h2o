@@ -4,9 +4,13 @@ profile: run
 ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
 supply_chain: basic
 
+shared:
+  ingress_domain: #@ "{}".format(data.values.tap.view.ingress.domain)
+
 cnrs:
   domain_name: #@ "run.{}".format(data.values.tap.view.ingress.domain)
   domain_template: "{{.Name}}.{{.Domain}}"
+  ingress_issuer: letsencrypt-contour-cluster-issuer
 
 contour:
   envoy:
@@ -16,9 +20,5 @@ contour:
 appliveview_connector:
   backend:
     host: #@ "appliveview.{}".format(data.values.tap.view.ingress.domain)
-    sslDisabled: false
+    sslDisabled: true
     ingressEnabled: true
-
-excluded_packages:
-- image-policy-webhook.signing.apps.tanzu.vmware.com
-- policy.apps.tanzu.vmware.com

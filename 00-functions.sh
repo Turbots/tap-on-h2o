@@ -49,6 +49,7 @@ function createDirectory() {
 function determinePlatform() {
     if [ "$(uname)" = "Darwin" ]; then
         info "Platform is Mac."
+        determineIfSiliconMac
         export PLATFORM="darwin"
     elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
         info "Platform is Linux."

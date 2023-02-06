@@ -16,7 +16,7 @@ spec:
           args: [
             "copy",
             "-b",
-            "registry.tanzu.vmware.com/packages-for-vmware-tanzu-data-services/tds-packages:1.5.0",
+            "registry.tanzu.vmware.com/packages-for-vmware-tanzu-data-services/tds-packages:1.6.0",
             "--to-repo",
             "harbor.vsphere.hubau.cloud/library/tds-packages"
           ]

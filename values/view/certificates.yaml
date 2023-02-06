@@ -23,15 +23,9 @@ spec:
   commonName: #@ "*.{}".format(data.values.tap.view.ingress.domain)
   dnsNames:
   - #@ "*.{}".format(data.values.tap.view.ingress.domain)
-  duration: 2160h0m0s
   issuerRef:
-    kind: ClusterIssuer
     name: letsencrypt-contour-cluster-issuer
-    namespace: #@ data.values.tap.view.ingress.tls_namespace
-  privateKey:
-    algorithm: RSA
-    encoding: PKCS1
-    size: 2048
+    kind: ClusterIssuer
   subject:
     organizations:
     - vmware
@@ -51,11 +45,6 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-contour-cluster-issuer
-    namespace: #@ data.values.tap.view.ingress.tls_namespace
-  privateKey:
-    algorithm: RSA
-    encoding: PKCS1
-    size: 2048
   subject:
     organizations:
     - vmware

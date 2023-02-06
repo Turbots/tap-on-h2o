@@ -10,16 +10,9 @@ loadSetting '.essentials.registry.hostname' 'INSTALL_REGISTRY_HOSTNAME'
 loadSetting '.essentials.registry.username' 'INSTALL_REGISTRY_USERNAME'
 loadSetting '.essentials.registry.password' 'INSTALL_REGISTRY_PASSWORD' '-p'
 
-function download_cluster_essentials(){
+function download_cluster_essentials() {
     if [[ ! -f "downloads/tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz" ]]; then
-        if [ SILICON_MAC = "true" ]; then
-            warn "Pivnet CLI is not yet supported on Apple Silicon chip (ARM64). Please download the Cluster Essentials file manually, or run this script in Linux using DevContainers."
-        else
-            info "Downloading cluster essentials for $PLATFORM"
-            pivnet login --api-token=$TANZU_NETWORK_TOKEN
-            pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$1 --product-file-id=1330470
-            mv tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz downloads/tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz
-        fi
+        curl -L -H "Authorization: Token $TANZU_NETWORK_TOKEN" -o "downloads/tanzu-cluster-essentials-$PLATFORM-amd64-1.4.0.tgz" "https://network.tanzu.vmware.com/api/v2/products/tanzu-cluster-essentials/releases/1238179/product_files/1407186/download"
     else
         info "Cluster essentials already downloaded - Skipping!"
     fi

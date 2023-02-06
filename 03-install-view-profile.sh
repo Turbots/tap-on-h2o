@@ -39,14 +39,9 @@ function install_tap_view_profile() {
 
     info "Configuring automated DNS certificates"
 
-    kapp deploy -n tap-install -a external-dns \
-        --file <(\
-            ytt -f $VALUES_DIR/default.yaml -f $VALUES_DIR/view/external-dns.yaml --ignore-unknown-comments \
-        ) --yes
-
     kapp deploy -n tap-install -a lets-encrypt-issuer \
         --file <(\
-            ytt -f $VALUES_DIR/default.yaml -f $VALUES_DIR/view/letsencrypt.yaml --ignore-unknown-comments \
+            ytt -f $VALUES_DIR/default.yaml -f $VALUES_DIR/letsencrypt.yaml --ignore-unknown-comments \
         ) --yes
 
     kapp deploy -n tap-install -a certificates \
@@ -73,7 +68,7 @@ function install_harbor() {
           --from-file=$VALUES_DIR/view/harbor-overlay.yaml
     ) --yes
 
-    kubectl -n tap-install annotate packageinstalls harbor ext.packaging.carvel.dev/ytt-paths-from-secret-name.1=harbor-overlay
+    kubectl -n tap-install annotate packageinstalls harbor ext.packaging.carvel.dev/ytt-paths-from-secret-name.1=harbor-overlay --overwrite
     kubectl delete pods -l app=harbor -n tanzu-system-registry
 
     info "Harbor installed successfully on $1"

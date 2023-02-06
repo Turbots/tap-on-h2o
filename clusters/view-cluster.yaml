@@ -7,16 +7,16 @@ spec:
     version: 1.22.9
   settings:
     storage:
-      defaultClass: vc01cl01-t0compute
+      defaultClass: tanzu
   topology:
     controlPlane:
       replicas: 1
-      storageClass: vc01cl01-t0compute
+      storageClass: tanzu
       vmClass: best-effort-medium
     nodePools:
     - name: default-nodepool
       replicas: 3
-      storageClass: vc01cl01-t0compute
+      storageClass: tanzu
       vmClass: best-effort-2xlarge
       volumes:
         - name: containerd

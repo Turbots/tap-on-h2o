@@ -8,22 +8,14 @@ learningcenter:
   ingressSecret:
     secretName: #@ "learning-center-{}".format(data.values.tap.view.ingress.tls_secret)
 
-supply_chain: basic
-
-appliveview:
-  ingressEnabled: true
-  ingressDomain: #@ data.values.tap.view.ingress.domain
-  tls:
-    namespace: #@ data.values.tap.view.ingress.tls_namespace
-    secretName: #@ data.values.tap.view.ingress.tls_secret
+shared:
+  ingress_domain: #@ data.values.tap.view.ingress.domain
 
 tap_gui:
   service_type: ClusterIP # NodePort for distributions that don't support LoadBalancer
-  ingressEnabled: true
-  ingressDomain: #@ data.values.tap.view.ingress.domain
   tls:
     namespace: #@ data.values.tap.view.ingress.tls_namespace
-    secretName: #@ data.values.tap.view.ingress.tls_secret                                                 
+    secretName: #@ data.values.tap.view.ingress.tls_secret
   app_config: 
     auth:
       environment: development
@@ -57,15 +49,15 @@ tap_gui:
       clusterLocatorMethods:
       - type: config
         clusters:
-        - url: https://10.220.27.196:6443
+        - url: https://10.220.26.166:6443
           name: tap-build
           authProvider: serviceAccount
-          serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IkpjNXVSVmJDbXV2b3g1ZjhrbGs4elYwdUc4Z0tlR3hwOU1UUlNNWUxwWlUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLWp6NmZuIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNjExYjZjZDYtYzU3Ny00ZDY4LTg5MDQtNmU5YzU5YjBkOTU0Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.sU0w_iog51c7YoqjWxYo0unr59CsLNo3BO96FzdIcY0-HO-GUmfJef5HsemyjQKn4sXnDhmby5F-ty9S-BIA4pNq1fJweLAYkD1eGJeumPeCEXAm_r1zfGrNSmvqT2tPYyS5-BFvFooki52tOT9SqQpFvbcMwp_uchJe94hSQXMaskvW4nD6KFKFYokxRSftkzqvdxscGaUcv8noxDOL_1Kr6HpQ0psQ3euhjYW4-7a_55y6bl0oU4B5KYNl9B-QecFtY_BX8tYjcFMhcOXqRN6XI5OWJxeprJ1QAcWNGhtSIo8qHqiGNwqg6o1yeoTtBYqfIvFWqGdn4QoBya57rw
+          serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IkdIR3BQaVByMG4wU2UzRURkNWQzTFdRdkJ2bm03TkpXSkIyZ0wzNVNzVEkifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLWptZzlsIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiOGI3ZDk3ZTAtNWM1OS00Y2MwLTg5NWQtMTQzM2U3ODliZmEzIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.kFI9yg6fvrbG4BOo3FF8dOakyO_VJvBXL1hrmXycqPFvGscXWSvP9salm8oKUeuA2QTY30Gro1QinUQL3yYBgeDH2SirBfpGuR725IDgXcbFjEe1sk_1iQ1FmKKONvGKrmDnS9WCBsYK4eYFQpxIxFkYgwyU0csVU-SmATCH6nN50OHssZTb1p9USUPPtr589nIRA2yCgEZxNHlZxCON0_IojwObPMjmESC8C5E1-fEZrseTAj29YbH5GMKiYXrTXgxG3pPtY4hzJuCuW3id3I6iJZ2Mql8tnKDFSJRgVjcQPtW1lgCz72UzcFrMnYKfP_548pmTxFOP0eNqfPu99g
           skipTLSVerify: true
-        - url: https://10.220.27.199:6443
+        - url: https://10.220.26.167:6443
           name: tap-run
           authProvider: serviceAccount
-          serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IjJZUVIwS2toTVA4bnJhdktKVWNuUERjMGZfdG1OTmp1N193M3VMUHFEVmcifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLWJrbWZqIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiOTkyNzI5ODAtOTVjZC00YjAxLWE4Y2UtN2FhMDMwMzk0MDBkIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.TRScF799xOQrwoGLpGmGkoMnbqqa9cV3LdvOYtfV31UmmMLtB2uheC7XnB9Y7lW4hGSP_G8D2aiMfUuv2K_eQlB71CVMX9H_5GByBbQDWe2lxRKMdjYRBtaGazVkyNlY7oU1VoAVL7-FcAssqlBMFXPSGD5yrA6vpgfQSTLhbwNzl8md1Z9XD4pXAj8xX722VebTpX3oiv_aqX5J4OunyRKVsBO3GhbQe6KVw5Q_DLuf6uyCl_RG71vzAUila4EDccoPks_-oNWW6JL6lAcruSA3Y-ZLtGljP9FD__2D0XslTvvyOKsxCngwwcwC9_eyiN4BYMKUKI_Hgc_r928R3Q
+          serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6ImxqX3l1SDI4bHY3eGNMVFdydDhiUVhzYmNvby05WHItYnJpN3NrWmRYYncifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLTdxZ245Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNTdkNjMyNWMtMDA4OC00YjE0LThhZjAtNmVjZGEwNmRmNTY1Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.KR0VbwwIzddh7vPVO0QO9Qu72ew9rPQE_UPmf8DzIEoDSmzJDTCTXtuMqVhAMujewkQ3fVNkK8QFKv7rtbk-u0PAw0KOzCbkncUk60ZsxEbd1njvxB5SM33nZn8cwRv4ewWIJdViBxafw42yOuLltVzE5vSScnyOr7THHM6Jj0Mmsbz3hVh3Myg1XTymHmfDVme2xJarnjVtfjsNejkuD4QKwgnCHPzKvo8K9Efizqd-IQk4_HjOLZsCBEeaJiy2igswkmhTDQiHCpxYXo-DdAJXqwPURTb46JZiyCLdg1GaXvQ0wYiZAcQ16xcR4KKSjL0x5sNUUWRhWEDYhSjX6A
           skipTLSVerify: true
     proxy:
       /metadata-store:
@@ -97,3 +89,9 @@ accelerator:
     secretName: #@ data.values.tap.view.ingress.tls_secret
   server:
     service_type: ClusterIP
+
+appliveview:
+  ingressEnabled: true
+  tls:
+    namespace: #@ data.values.tap.view.ingress.tls_namespace
+    secretName: #@ data.values.tap.view.ingress.tls_secret

@@ -2,10 +2,16 @@
 ---
 profile: build
 ceip_policy_disclosed: true # Installation fails if this is set to 'false'
+
+shared:
+  ingress_domain: #@ data.values.tap.view.ingress.domain
+  image_registry:
+    # To be used by Build Service by appending "/buildservice" and used by Supply chain by appending "/workloads".
+    project_path: #@ "{}/{}".format(data.values.tap.developer.registry.hostname,data.values.tap.developer.registry.project)
+    username: #@ data.values.tap.developer.registry.username
+    password: #@ data.values.tap.developer.registry.password
+
 buildservice:
-  kp_default_repository: #@ "{}/{}/build-service".format(data.values.tap.developer.registry.hostname,data.values.tap.developer.registry.project)
-  kp_default_repository_username: #@ data.values.tap.developer.registry.username
-  kp_default_repository_password: #@ data.values.tap.developer.registry.password
   tanzunet_username: #@ data.values.tap.registry.username
   tanzunet_password: #@ data.values.tap.registry.password
   enable_automatic_dependency_updates: true
@@ -14,9 +20,6 @@ buildservice:
 supply_chain: testing_scanning
 
 ootb_supply_chain_testing_scanning:
-  registry:
-    server: #@ data.values.tap.developer.registry.hostname
-    repository: #@ data.values.tap.developer.registry.project_workload
   gitops:
     ssh_secret: "git-secret"
     server_address: #@ data.values.gitops_repository.server_address

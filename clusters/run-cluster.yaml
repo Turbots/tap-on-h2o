@@ -3,20 +3,24 @@ kind: TanzuKubernetesCluster
 metadata:
   name: tap-run
 spec:
-  distribution:
-    version: 1.22.9
   settings:
     storage:
-      defaultClass: vc01cl01-t0compute
+      defaultClass: tanzu
   topology:
     controlPlane:
+      tkr:
+        reference:
+          name: v1.23.8---vmware.3-tkg.1
       replicas: 1
-      storageClass: vc01cl01-t0compute
+      storageClass: tanzu
       vmClass: guaranteed-medium
     nodePools:
     - name: default-nodepool
+      tkr:
+        reference:
+          name: v1.23.8---vmware.3-tkg.1
       replicas: 3
-      storageClass: vc01cl01-t0compute
+      storageClass: tanzu
       vmClass: guaranteed-2xlarge-lowmem
       volumes:
         - name: containerd
