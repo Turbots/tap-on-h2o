@@ -42,3 +42,60 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gitops
+rules:
+- apiGroups:
+  - carto.run
+  resources:
+  - workloads
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - patch
+  - update
+  - delete
+  - deletecollection
+- apiGroups:
+  - scanning.apps.tanzu.vmware.com
+  resources:
+  - scanpolicies
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - patch
+  - update
+  - delete
+  - deletecollection
+- apiGroups:
+  - "tekton.dev"
+  resources:
+  - pipelines
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - patch
+  - update
+  - delete
+  - deletecollection
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default-permit-gitops
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gitops
+subjects:
+  - kind: ServiceAccount
+    name: default

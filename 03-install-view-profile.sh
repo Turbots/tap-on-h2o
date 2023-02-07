@@ -69,7 +69,7 @@ function install_harbor() {
     ) --yes
 
     kubectl -n tap-install annotate packageinstalls harbor ext.packaging.carvel.dev/ytt-paths-from-secret-name.1=harbor-overlay --overwrite
-    kubectl delete pods -l app=harbor -n tanzu-system-registry
+    kubectl delete pods -l app=harbor -n tanzu-system-registry --wait=false
 
     info "Harbor installed successfully on $1"
 }

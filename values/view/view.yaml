@@ -42,7 +42,7 @@ tap_gui:
     catalog:
       locations:
         - type: url
-          target: https://github.com/Turbots/tap-catalog/blob/main/catalog-info.yaml
+          target: https://github.com/TanzuDK/tap-config/blob/main/catalog-info.yaml
     kubernetes:
       serviceLocatorMethod:
         type: multiTenant
