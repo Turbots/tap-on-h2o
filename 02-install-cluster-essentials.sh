@@ -12,7 +12,7 @@ loadSetting '.essentials.registry.password' 'INSTALL_REGISTRY_PASSWORD' '-p'
 
 function download_cluster_essentials() {
     if [[ ! -f "downloads/tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz" ]]; then
-        curl -L -H "Authorization: Token $TANZU_NETWORK_TOKEN" -o "downloads/tanzu-cluster-essentials-$PLATFORM-amd64-1.4.0.tgz" "https://network.tanzu.vmware.com/api/v2/products/tanzu-cluster-essentials/releases/1238179/product_files/1407186/download"
+        curl -L -H "Authorization: Token $TANZU_NETWORK_TOKEN" -o "downloads/tanzu-cluster-essentials-$PLATFORM-amd64-$1.tgz" "https://network.tanzu.vmware.com/api/v2/products/tanzu-cluster-essentials/releases/1238179/product_files/1407186/download"
     else
         info "Cluster essentials already downloaded - Skipping!"
     fi
